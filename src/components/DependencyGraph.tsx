@@ -58,20 +58,20 @@ export function DependencyGraph({ conceptId }: DependencyGraphProps) {
 
     node.append('circle')
       .attr('r', 6)
-      .attr('fill', (d: any) => d.data.id === conceptId ? '#f59e0b' : '#6366f1')
-      .attr('stroke', '#fff')
+      .attr('fill', (d: any) => d.data.id === conceptId ? '#d946ef' : '#06b6d4')
+      .attr('stroke', '#18181b')
       .attr('stroke-width', 2)
-      .attr('filter', 'drop-shadow(0 0 5px rgba(99, 102, 241, 0.5))');
+      .attr('filter', 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.4))');
 
     node.append('text')
       .attr('dy', '.35em')
       .attr('x', (d: any) => d.children ? -12 : 12)
       .attr('text-anchor', (d: any) => d.children ? 'end' : 'start')
       .text((d: any) => d.data.name)
-      .attr('fill', '#94a3b8')
-      .attr('font-size', '10px')
-      .attr('font-weight', 'bold')
-      .attr('class', 'font-sans');
+      .attr('fill', '#71717a')
+      .attr('font-size', '9px')
+      .attr('font-weight', '700')
+      .attr('class', 'font-sans uppercase tracking-tight');
 
   }, [conceptId]);
 

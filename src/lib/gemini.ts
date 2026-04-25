@@ -1,21 +1,34 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+let genAI: GoogleGenerativeAI | null = null;
 
-export const model = genAI.getGenerativeModel({ 
-  model: "gemini-2.0-flash",
-  systemInstruction: `You are an expert DevOps Tutor and Learning Co-Pilot. 
+function getGenAI() {
+  if (!genAI) {
+    const meta = import.meta as any;
+    const apiKey = meta.env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env.GEMINI_API_KEY : '');
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is not defined. Please add GEMINI_API_KEY to your environment variables in AI Studio settings.");
+    }
+    genAI = new GoogleGenerativeAI(apiKey);
+  }
+  return genAI;
+}
+
+export const getTutorResponse = async (history: any[], userInput: string, userContext: any) => {
+  const ai = getGenAI();
+  const model = ai.getGenerativeModel({ 
+    model: "gemini-2.0-flash",
+    systemInstruction: `You are an expert DevOps Tutor and Learning Co-Pilot. 
 Your goal is to help users learn Docker, Kubernetes, CI/CD, and Cloud Native concepts iteratively.
 Adapt your style based on user responses:
 - If they are confused, use real-world analogies.
 - If they are experienced, be technical and concise.
 - Use Socratic questioning to force them to reason through problems.
-- detected shallow understanding and misconceptions.
+- Try to detect shallow understanding and misconceptions.
 
-ALWAYS respond in JSON format if requested, but for chat, be conversational and supportive.`
-});
+ALWAYS respond in a conversational and supportive way. Keep responses concise but insightful.`
+  });
 
-export const getTutorResponse = async (history: any[], userInput: string, userContext: any) => {
   const chat = model.startChat({
     history: history,
     generationConfig: {

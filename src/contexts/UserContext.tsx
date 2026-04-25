@@ -17,34 +17,27 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<any>({
+    displayName: 'Operator',
+    totalMastery: 0.15,
+    learningVelocity: 1.2,
+    uid: 'guest-123'
+  });
   const [userConcepts, setUserConcepts] = useState<Record<string, any>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Only use auth if available, otherwise stay in guest mode
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
-      setUser(u);
       if (u) {
-        // Fetch or create profile
+        setUser(u);
         const userRef = doc(db, 'users', u.uid);
         const docSnap = await getDoc(userRef);
         
-        if (!docSnap.exists()) {
-          const newProfile = {
-            uid: u.uid,
-            email: u.email,
-            displayName: u.displayName,
-            totalMastery: 0,
-            learningVelocity: 0,
-            createdAt: new Date().toISOString()
-          };
-          await setDoc(userRef, newProfile);
-          setProfile(newProfile);
-        } else {
+        if (docSnap.exists()) {
           setProfile(docSnap.data());
         }
 
-        // Sync concepts
         const conceptsRef = collection(db, 'users', u.uid, 'concepts');
         const unsubConcepts = onSnapshot(conceptsRef, (snapshot) => {
           const concepts: Record<string, any> = {};
@@ -55,11 +48,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         });
 
         return () => unsubConcepts();
-      } else {
-        setProfile(null);
-        setUserConcepts({});
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();

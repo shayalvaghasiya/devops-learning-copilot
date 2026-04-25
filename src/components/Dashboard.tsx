@@ -57,42 +57,44 @@ export function Dashboard() {
     >
       {/* Knowledge Graph Section (Left) */}
       <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-        <motion.div variants={itemVariants} className="bento-card flex flex-col flex-grow">
+        <motion.div variants={itemVariants} className="bento-card flex flex-col flex-grow border-zinc-800 bg-zinc-900/40">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Knowledge Mapping</h3>
+              <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-1">Knowledge Mapping</h3>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <Brain size={18} className="text-indigo-400" />
-                Dynamic Concept Graph
+                <Brain size={18} className="text-cyan-400" />
+                Neural Concept Graph
               </h2>
             </div>
-            <span className="px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded text-[10px] font-bold border border-indigo-500/20">Live Sync</span>
+            <span className="px-2 py-1 bg-cyan-500/10 text-cyan-400 rounded text-[10px] font-bold border border-cyan-500/20 uppercase tracking-tighter">Live Sync</span>
           </div>
           
-          <div className="flex-grow flex items-center justify-center relative overflow-hidden bg-slate-950/50 rounded-2xl border border-slate-800/50 min-h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="flex-grow flex items-center justify-center relative overflow-hidden bg-zinc-950/80 rounded-2xl border border-zinc-800/50 min-h-[300px]">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                <PolarGrid stroke="#334155" strokeDasharray="3 3" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 600 }} />
+                <PolarGrid stroke="#27272a" strokeDasharray="3 3" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#71717a', fontSize: 10, fontWeight: 700 }} />
                 <Radar
                   name="Mastery"
                   dataKey="A"
-                  stroke="#6366f1"
-                  fill="#6366f1"
-                  fillOpacity={0.4}
+                  stroke="#06b6d4"
+                  fill="#06b6d4"
+                  fillOpacity={0.3}
                 />
               </RadarChart>
             </ResponsiveContainer>
+            {/* Scanner line animation artifact */}
+            <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent animate-scan"></div>
           </div>
 
           <div className="mt-6 space-y-3">
             <div className="flex justify-between items-end">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Syllabus Mastery</span>
-              <span className="text-emerald-400 font-mono text-sm font-bold">{Math.round((profile?.totalMastery || 0) * 100)}%</span>
+              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Syllabus Mastery</span>
+              <span className="text-cyan-400 font-mono text-sm font-black">{Math.round((profile?.totalMastery || 0) * 100)}%</span>
             </div>
-            <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700/50">
+            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden border border-zinc-700/30">
               <div 
-                className="bg-emerald-500 h-full transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.5)]" 
+                className="bg-cyan-500 h-full transition-all duration-1000 shadow-[0_0_15px_rgba(6,182,212,0.6)]" 
                 style={{ width: `${(profile?.totalMastery || 0) * 100}%` }}
               ></div>
             </div>
@@ -100,25 +102,25 @@ export function Dashboard() {
         </motion.div>
 
         {/* Dependency Depth Card */}
-        <motion.div variants={itemVariants} className="bento-card flex flex-col h-[350px]">
+        <motion.div variants={itemVariants} className="bento-card flex flex-col h-[350px] border-zinc-800 bg-zinc-900/40">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Conceptual Roots</h3>
+              <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-1">Conceptual Roots</h3>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <GitBranch size={18} className="text-amber-400" />
+                <GitBranch size={18} className="text-fuchsia-400" />
                 Dependency Depth
               </h2>
             </div>
           </div>
-          <div className="flex-grow bg-slate-950/30 rounded-2xl border border-slate-800/50 overflow-hidden relative">
+          <div className="flex-grow bg-zinc-950/50 rounded-xl border border-zinc-800/50 overflow-hidden relative">
             <div className="absolute top-4 left-4 z-10 flex flex-col gap-1">
-              <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Focusing on</p>
-              <h4 className="text-xs font-bold text-white bg-slate-900 px-2 py-1 rounded inline-block border border-slate-700 shadow-xl">{weakestConcept.title}</h4>
+              <p className="text-[9px] text-zinc-500 uppercase font-black tracking-widest">Focusing on</p>
+              <h4 className="text-[11px] font-bold text-white bg-zinc-900/80 px-2 py-1 rounded inline-block border border-zinc-700 shadow-2xl backdrop-blur-sm">{weakestConcept.title}</h4>
             </div>
             <DependencyGraph conceptId={weakestConcept.id} />
           </div>
-          <p className="mt-4 text-[10px] text-slate-500 leading-tight">
-            Visualizing the required chain of mental models to master <span className="text-white font-bold">{weakestConcept.title}</span>.
+          <p className="mt-4 text-[10px] text-zinc-500 leading-tight font-medium">
+            Visualizing the required chain of mental models to master <span className="text-white font-bold tracking-tight">{weakestConcept.title}</span>.
           </p>
         </motion.div>
       </div>
@@ -127,63 +129,64 @@ export function Dashboard() {
       <div className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Engagement Stats */}
-        <motion.div variants={itemVariants} className="bento-card grid grid-cols-2 gap-4 h-32">
+        <motion.div variants={itemVariants} className="bento-card grid grid-cols-2 gap-4 h-32 bg-zinc-900/40 border-zinc-800">
           <div className="flex flex-col justify-center">
-            <p className="text-[10px] text-slate-500 uppercase mb-1 font-bold tracking-widest">Velocity</p>
-            <p className="text-3xl font-black text-indigo-400">{profile?.learningVelocity?.toFixed(1) || '0.0'}</p>
-            <p className="text-[10px] text-slate-500 mt-1">Concepts/Hour</p>
+            <p className="text-[9px] text-zinc-500 uppercase mb-1 font-black tracking-[0.2em]">Velocity</p>
+            <p className="text-4xl font-black text-cyan-400 tracking-tighter">{profile?.learningVelocity?.toFixed(1) || '0.0'}</p>
+            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-wider mt-1">Concepts/Hour</p>
           </div>
-          <div className="flex flex-col justify-center border-l border-slate-800 pl-4">
-            <p className="text-[10px] text-slate-500 uppercase mb-1 font-bold tracking-widest">Mastery Gain</p>
-            <p className="text-3xl font-black text-emerald-400">+{Math.round((profile?.totalMastery || 0) * 50)}%</p>
-            <p className="text-[10px] text-slate-500 mt-1">Weekly average</p>
+          <div className="flex flex-col justify-center border-l border-zinc-800 pl-6">
+            <p className="text-[9px] text-zinc-500 uppercase mb-1 font-black tracking-[0.2em]">Mastery Gain</p>
+            <p className="text-4xl font-black text-fuchsia-500 tracking-tighter">+{Math.round((profile?.totalMastery || 0) * 50)}%</p>
+            <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-wider mt-1">Weekly avg</p>
           </div>
         </motion.div>
 
         {/* Cognitive Gaps */}
-        <motion.div variants={itemVariants} className="bento-card flex flex-col h-32">
-          <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+        <motion.div variants={itemVariants} className="bento-card flex flex-col h-32 bg-zinc-900/40 border-zinc-800">
+          <h2 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
             <AlertCircle size={14} className="text-amber-500" />
-            Detected Gaps
+            Detected Anomalies
           </h2>
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {weakPoints.length > 0 ? weakPoints.map(c => (
-              <div key={c.id} className="shrink-0 px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl flex items-center gap-2 max-w-[180px]">
-                <CircleDashed size={14} className="text-amber-500" />
-                <span className="text-[11px] font-bold text-slate-300 truncate">{c.title}</span>
+              <div key={c.id} className="shrink-0 px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-xl flex items-center gap-2 max-w-[180px]">
+                <CircleDashed size={12} className="text-amber-500" />
+                <span className="text-[11px] font-bold text-zinc-300 truncate uppercase tracking-tight">{c.title}</span>
               </div>
             )) : (
-              <p className="text-[11px] text-slate-500 italic">No major misconceptions detected.</p>
+              <p className="text-[11px] text-zinc-600 italic font-medium">Clear cognitive path detected.</p>
             )}
           </div>
         </motion.div>
 
         {/* Hero Learning Path Card */}
-        <motion.div variants={itemVariants} className="md:col-span-2 relative bg-white rounded-[32px] p-8 flex flex-col min-h-[300px] shadow-2xl overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 blur-[100px] -mr-32 -mt-32"></div>
+        <motion.div variants={itemVariants} className="md:col-span-2 relative bg-zinc-50 rounded-2xl p-10 flex flex-col min-h-[350px] shadow-[0_30px_70px_rgba(0,0,0,0.4)] overflow-hidden group border border-white">
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-cyan-500/10 blur-[120px] -mr-48 -mt-48 transition-transform group-hover:scale-110 duration-1000"></div>
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-fuchsia-500/10 blur-[120px] -ml-40 -mb-40"></div>
           
-          <div className="relative z-10 flex flex-col h-full">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="px-3 py-1 bg-slate-900 text-white rounded-full text-[10px] font-bold tracking-widest uppercase">Adaptive Goal</div>
-              <div className="h-px flex-grow bg-slate-100"></div>
+          <div className="relative z-10 flex flex-col h-full uppercase">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="px-3 py-1 bg-zinc-950 text-white rounded text-[10px] font-black tracking-[0.3em]">ADAPTIVE TARGET</div>
+              <div className="h-px flex-grow bg-zinc-200"></div>
             </div>
 
-            <h2 className="text-slate-900 font-black text-4xl mb-4 leading-tight">
-              Bridge the gap in <span className="text-indigo-600">Kubernetes Networking</span>
+            <h2 className="text-zinc-950 font-black text-5xl mb-6 leading-[0.9] tracking-tighter">
+              Bridge the neural gap <br/> in <span className="text-cyan-600">K8s Networking</span>
             </h2>
             
-            <p className="text-slate-500 text-lg mb-8 max-w-xl">
-              Your model shows high comprehension in Docker, but slight hesitation when discussing Ingress logic. Let's fix that.
+            <p className="text-zinc-600 text-lg mb-10 max-w-xl normal-case font-medium leading-relaxed">
+              Detection of slight hesitation during Ingress logic exercises. Initializing specialized remediation lab to reinforce foundational routing models.
             </p>
 
-            <div className="mt-auto flex items-center gap-4">
-              <button className="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-xl shadow-indigo-200 hover:bg-slate-900 transition-all flex items-center gap-3">
-                Start adaptive lab
-                <TrendingUp size={20} />
+            <div className="mt-auto flex items-center gap-6">
+              <button className="px-10 py-5 bg-zinc-950 text-white rounded-xl font-black text-xl shadow-2xl hover:bg-cyan-600 transition-all flex items-center gap-4 tracking-tighter">
+                INITIALIZE LAB
+                <TrendingUp size={22} className="text-cyan-400" />
               </button>
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 border border-slate-100 rounded-2xl text-slate-400 font-bold text-sm">
-                <CheckCircle2 size={16} className="text-emerald-500" />
-                Foundations Verified
+              <div className="hidden sm:flex items-center gap-3 px-5 py-3 border border-zinc-200 rounded-xl text-zinc-500 font-black text-[10px] tracking-widest bg-white/50">
+                <CheckCircle2 size={16} className="text-cyan-500" />
+                FOUNDATIONS VERIFIED
               </div>
             </div>
           </div>

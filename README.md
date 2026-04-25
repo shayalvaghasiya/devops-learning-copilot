@@ -1,20 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ALC DevOps: Adaptive Learning Copilot
 
-# Run and deploy your AI Studio app
+ALC DevOps is a next-generation adaptive learning platform designed to help engineers master DevOps concepts through real-time cognitive modeling and scenario-driven interaction. Unlike traditional video-based courses, ALC builds a dynamic knowledge graph of your understanding, identifying hesitation patterns and cognitive gaps to guide your learning path.
 
-This contains everything you need to run your app locally.
+## Key Features
 
-View your app in AI Studio: https://ai.studio/apps/b83d96bd-7fe7-4e20-9b7a-e4b8e193a7f4
+- **Neural Knowledge Graph**: A visual representation of your conceptual mastery, mapping dependencies across Docker, Kubernetes, CI/CD, and more.
+- **Socratic AI Tutor**: An intelligent copilot that uses Socratic questioning to detect shallow understanding and force deep reasoning.
+- **Cognitive Modeling**: The system tracks learning velocity and identifies "anomalies" or gaps in your mental models of infrastructure logic.
+- **Dependency Analytics**: Visualizes the conceptual roots required to master complex topics like Kubernetes networking.
+- **Scenario-Driven Remediation**: Automatically suggests "adaptive labs" to bridge specific gaps detected during your interaction.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Frontend**: React 18+, Vite, TypeScript, Tailwind CSS
+- **Animations**: Framer Motion (motion/react)
+- **Data Visualization**: Recharts, D3.js
+- **Icons**: Lucide React
+- **Backend (Optional)**: Firebase (Firestore/Auth) for persistent profile tracking
+- **AI**: Gemini Pro via Google Generative AI SDK for the Socratic tutoring engine
 
+## Architecture
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+The application is structured around a "Cognitive Engine" concept. It maintains a state of the user's proficiency across various DevOps nodes.
+- `Dashboard`: Provides high-level analytics and dependency mapping.
+- `TutorChat`: The interactive interface for deep learning sessions.
+- `Roadmap`: Defines the conceptual hierarchy and prerequisite chain.
