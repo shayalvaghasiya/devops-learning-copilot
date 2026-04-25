@@ -17,14 +17,33 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<any>({
-    displayName: 'Operator',
-    totalMastery: 0.15,
-    learningVelocity: 1.2,
-    uid: 'guest-123'
+  const [profile, setProfile] = useState<any>(() => {
+    const saved = localStorage.getItem('guest_profile');
+    if (saved) return JSON.parse(saved);
+    return {
+      displayName: 'Operator',
+      totalMastery: 0.15,
+      learningVelocity: 1.2,
+      uid: 'guest-123'
+    };
   });
-  const [userConcepts, setUserConcepts] = useState<Record<string, any>>({});
+  const [userConcepts, setUserConcepts] = useState<Record<string, any>>(() => {
+    const saved = localStorage.getItem('guest_concepts');
+    if (saved) return JSON.parse(saved);
+    // Initial mock progress for better empty state
+    return {
+      'intro-virtualization': { mastery: 0.8, lastStudied: new Date().toISOString() },
+      'containers-vs-vms': { mastery: 0.4, lastStudied: new Date().toISOString() }
+    };
+  });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      localStorage.setItem('guest_profile', JSON.stringify(profile));
+      localStorage.setItem('guest_concepts', JSON.stringify(userConcepts));
+    }
+  }, [profile, userConcepts, user]);
 
   useEffect(() => {
     // Only use auth if available, otherwise stay in guest mode

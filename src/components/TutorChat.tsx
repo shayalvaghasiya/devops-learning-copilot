@@ -27,10 +27,27 @@ export function TutorChat() {
       const saved = localStorage.getItem('guest_messages');
       if (saved) {
         try {
-          setMessages(JSON.parse(saved));
+          const parsed = JSON.parse(saved);
+          if (parsed.length > 0) {
+            setMessages(parsed);
+          } else {
+            setMessages([{
+              id: 'welcome',
+              role: 'assistant',
+              content: "Hello! I'm your DevOps Learning Co-Pilot. I'm currently tracking your neural pathways in Docker and Virtualization. What would you like to dive into today?",
+              timestamp: new Date()
+            }]);
+          }
         } catch (e) {
           console.error('Failed to parse guest messages', e);
         }
+      } else {
+        setMessages([{
+          id: 'welcome',
+          role: 'assistant',
+          content: "Hello! I'm your DevOps Learning Co-Pilot. I'm currently tracking your neural pathways in Docker and Virtualization. What would you like to dive into today?",
+          timestamp: new Date()
+        }]);
       }
       return;
     }

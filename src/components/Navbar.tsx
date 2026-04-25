@@ -8,8 +8,8 @@ export function Navbar({ activeTab, setActiveTab }: { activeTab: string, setActi
 
   return (
     <nav className="fixed top-0 left-0 right-0 h-20 bg-zinc-900/50 backdrop-blur-xl border-b border-zinc-800 z-50 flex items-center justify-between px-8 mx-6 mt-4 rounded-xl shadow-2xl">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center font-black text-xl text-white shadow-lg shadow-cyan-500/20">
+      <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setActiveTab('landing')}>
+        <div className="w-10 h-10 bg-cyan-600 rounded-lg flex items-center justify-center font-black text-xl text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
           Σ
         </div>
         <div>
