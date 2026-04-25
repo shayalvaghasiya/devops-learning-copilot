@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stores user global statistics and preferences",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "learningVelocity": { "type": "number" },
+        "totalMastery": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "UserConcept": {
+      "title": "User Concept State",
+      "description": "Tracks user mastery and behavior for a specific DevOps concept",
+      "type": "object",
+      "properties": {
+        "conceptId": { "type": "string" },
+        "mastery": { "type": "number" },
+        "confidence": { "type": "number" },
+        "attempts": { "type": "integer" },
+        "lastAttempt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["locked", "available", "learning", "mastered"] },
+        "misconceptions": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["conceptId", "mastery", "status"]
+    },
+    "Session": {
+      "title": "Learning Session",
+      "description": "Records a specific learning interaction",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "startTime": { "type": "string", "format": "date-time" },
+        "duration": { "type": "number" },
+        "topic": { "type": "string" },
+        "engagementScore": { "type": "number" }
+      },
+      "required": ["userId", "startTime"]
+    },
+    "ChatMessage": {
+      "title": "Chat Message",
+      "description": "A message in the tutor conversation",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "assistant"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "metadata": { "type": "object" }
+      },
+      "required": ["role", "content", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document"
+    },
+    "/users/{userId}/concepts/{conceptId}": {
+      "schema": "UserConcept",
+      "description": "User's mastery level for a specific concept"
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": "Session",
+      "description": "User learning sessions"
+    },
+    "/users/{userId}/sessions/{sessionId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages within a session"
+    }
+  }
+}

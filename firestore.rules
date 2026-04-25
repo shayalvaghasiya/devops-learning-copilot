@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3 Primitives
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isEmailVerified() { return request.auth.token.email_verified == true; }
+    function isAdmin() { return isSignedIn() && request.auth.token.email == 'shayalvaghasiya@gmail.com'; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // Validation Helpers
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'email']) &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.email.size() <= 256;
+    }
+
+    function isValidUserConcept(data) {
+      return data.keys().hasAll(['conceptId', 'mastery', 'status']) &&
+             data.conceptId is string &&
+             data.mastery is number &&
+             data.mastery >= 0 && data.mastery <= 1 &&
+             data.status in ['locked', 'available', 'learning', 'mastered'];
+    }
+
+    // 1. User Profiles
+    match /users/{userId} {
+      allow get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) &&
+                    isValidUserProfile(incoming()) &&
+                    incoming().uid == existing().uid;
+    }
+
+    // 2. User Concepts (Knowledge Graph State)
+    match /users/{userId}/concepts/{conceptId} {
+      allow list, get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidId(conceptId) && isValidUserConcept(incoming());
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidId(conceptId) &&
+                    isValidUserConcept(incoming()) &&
+                    incoming().conceptId == existing().conceptId;
+    }
+
+    // 3. Sessions
+    match /users/{userId}/sessions/{sessionId} {
+      allow list, get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidId(sessionId);
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidId(sessionId);
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow list, get: if (isOwner(userId) || isAdmin()) && isValidId(userId);
+        allow create: if isOwner(userId) && isValidId(userId) && isValidId(messageId);
+      }
+    }
+  }
+}
