@@ -22,7 +22,7 @@ export function TutorChat() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !db) {
       // Load from localStorage for guest
       const saved = localStorage.getItem('guest_messages');
       if (saved) {
@@ -89,7 +89,7 @@ export function TutorChat() {
         timestamp: new Date()
       };
 
-      if (user) {
+      if (user && db) {
         const messagesRef = collection(db, 'users', user.uid, 'sessions', 'current', 'messages');
         await addDoc(messagesRef, {
           role: 'user',
@@ -114,7 +114,7 @@ export function TutorChat() {
 
       const tutorResponse = response;
 
-      if (user) {
+      if (user && db) {
         const messagesRef = collection(db, 'users', user.uid, 'sessions', 'current', 'messages');
         await addDoc(messagesRef, {
           role: 'assistant',

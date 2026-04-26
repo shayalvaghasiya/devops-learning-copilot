@@ -47,6 +47,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Only use auth if available, otherwise stay in guest mode
+    if (!auth || !db) return;
+
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       if (u) {
         setUser(u);
@@ -74,10 +76,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signIn = async () => {
+    if (!auth) {
+      alert("Authentication is not configured. Please set up Firebase in AI Studio settings.");
+      return;
+    }
     await signInWithGoogle();
   };
 
   const logout = async () => {
+    if (!auth) return;
     await signOut(auth);
   };
 
